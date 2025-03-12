@@ -1,0 +1,71 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  telegramId String    @unique     // ID unique de l'utilisateur Telegram
+  firstName  String    // Prénom de l'utilisateur
+  lastName   String?   // Nom de famille (optionnel)
+  username   String?   // Username Telegram (optionnel)
+  language   String?   // Langue préférée de l'utilisateur
+  timezone   String?   // Fuseau horaire de l'utilisateur
+  tasks      Task[]    // Relation avec les tâches
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  title       String    // Titre de la tâche
+  description String?   @db.Text  // Description détaillée (optionnelle)
+  date        DateTime  // Date de la tâche
+  time        DateTime  // Heure du rappel
+  priority    Priority  @default(NORMAL)  // Priorité de la tâche
+  status      Status    @default(PENDING) // État de la tâche
+  category    Category  @relation(fields: [categoryId], references: [id]) // Relation avec la catégorie
+  categoryId  Int
+  user        User      @relation(fields: [userId], references: [id]) // Relation avec l'utilisateur
+  userId      Int
+  reminders   Reminder[] // Relation avec les rappels
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String    // Nom de la catégorie
+  color       String    // Couleur pour l'affichage
+  icon        String?   // Icône de la catégorie (optionnel)
+  tasks       Task[]    // Relation avec les tâches
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Reminder {
+  id          Int       @id @default(autoincrement())
+  task        Task      @relation(fields: [taskId], references: [id])
+  taskId      Int
+  reminderTime DateTime // Heure du rappel
+  sent        Boolean   @default(false) // Si le rappel a été envoyé
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum Priority {
+  LOW
+  NORMAL
+  HIGH
+}
+
+enum Status {
+  PENDING    // En attente
+  IN_PROGRESS // En cours
+  COMPLETED   // Terminée
+  CANCELLED   // Annulée
+} 
