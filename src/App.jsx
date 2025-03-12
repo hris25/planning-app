@@ -2,28 +2,39 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [debugInfo, setDebugInfo] = useState(""); // Stocker les logs
 
   useEffect(() => {
     if (window.Telegram) {
       const tg = window.Telegram.WebApp;
-      tg.expand();
+      tg.expand(); // Étendre la mini-app
 
-      console.log("Telegram WebApp Object", tg);
-      console.log("initDataUnsafe", tg.initDataUnsafe);
+      let debugText = "Telegram WebApp trouvé ✅\n";
 
-      // Récupérer les infos de l'utilisateur
-      if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        setUser(tg.initDataUnsafe.user);
+      if (tg.initDataUnsafe) {
+        debugText += `initDataUnsafe : ${JSON.stringify(
+          tg.initDataUnsafe,
+          null,
+          2
+        )}\n`;
+
+        if (tg.initDataUnsafe.user) {
+          setUser(tg.initDataUnsafe.user);
+        } else {
+          debugText += "❌ Pas de données utilisateur !";
+        }
       } else {
-        console.log("❌ Aucune donnée utilisateur reçue !");
+        debugText += "❌ initDataUnsafe est vide !";
       }
+
+      setDebugInfo(debugText); // Afficher les logs sur la page
     } else {
-      console.log("❌ window.Telegram non défini !");
+      setDebugInfo("❌ window.Telegram non défini !");
     }
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100 p-4">
       <h1 className="text-2xl font-bold">Mini-App Telegram</h1>
       {user ? (
         <div className="mt-4 text-center">
@@ -36,6 +47,11 @@ function App() {
       ) : (
         <p>Chargement des données utilisateur...</p>
       )}
+
+      <div className="mt-4 bg-gray-200 p-2 rounded">
+        <h2 className="text-lg font-bold">Debug Info 🛠️</h2>
+        <pre className="text-xs text-left">{debugInfo}</pre>
+      </div>
     </div>
   );
 }
