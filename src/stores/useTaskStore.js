@@ -31,17 +31,10 @@ const useTaskStore = create((set, get) => ({
   },
 
   // Gestion des tâches
-  addTask: async (taskData) => {
-    const newTask = await prisma.task.create({
-      data: {
-        title: taskData.title,
-        description: taskData.description,
-        date: new Date(taskData.date),
-        time: new Date(taskData.time),
-        userId: taskData.userId,
-      },
-    });
-    set((state) => ({ tasks: [...state.tasks, newTask] }));
+  addTask: (task) => {
+    set((state) => ({
+      tasks: [...state.tasks, task],
+    }));
   },
 
   toggleTaskStatus: async (taskId) => {
@@ -66,17 +59,15 @@ const useTaskStore = create((set, get) => ({
 
   // Statistiques
   getTodayTasks: () => {
-    const { tasks } = get();
-    const today = new Date();
-    return tasks.filter((task) => {
-      const taskDate = new Date(task.date);
-      return taskDate.toDateString() === today.toDateString();
-    });
+    const state = get();
+    const today = new Date().toDateString();
+    return state.tasks.filter(
+      (task) => new Date(task.date).toDateString() === today
+    );
   },
 
   getCompletedTasks: () => {
-    const { tasks } = get();
-    return tasks.filter((task) => task.status === "COMPLETED");
+    return get().tasks.filter((task) => task.status === "COMPLETED");
   },
 }));
 
