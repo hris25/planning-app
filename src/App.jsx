@@ -10,6 +10,18 @@ function App() {
       tg.ready(); // Indique que l'app est prête
       tg.expand(); // Étend la vue
 
+      if (tg) {
+        // Définir les couleurs du thème
+        tg.setHeaderColor("#000000");
+        tg.setBackgroundColor("#FFFFFF");
+
+        tg.MainButton.setText("VALIDER");
+        tg.MainButton.show();
+        tg.MainButton.onClick(() => {
+          // Action lors du clic
+          console.log("Button clicked!");
+        });
+      }
       // Récupération des données utilisateur
       if (tg.initDataUnsafe?.user) {
         setUser(tg.initDataUnsafe.user);
