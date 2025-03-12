@@ -1,9 +1,9 @@
-import create from "zustand";
+import { create } from "zustand";
 import prisma from "../lib/prisma";
 
 const useTaskStore = create((set, get) => ({
   tasks: [],
-  selectedDate: null,
+  selectedDate: new Date(),
   isCalendarOpen: false,
 
   // Actions

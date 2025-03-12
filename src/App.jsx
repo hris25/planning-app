@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Calendar from "./components/Calendar";
 import DailyTip from "./components/DailyTip";
 import FeatureGrid from "./components/FeatureGrid";
 import { features } from "./components/features";
@@ -53,6 +54,7 @@ function App() {
         <FeatureGrid features={features} />
         <DailyTip />
       </div>
+      <Calendar />
     </div>
   );
 }
