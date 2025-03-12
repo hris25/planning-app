@@ -6,12 +6,19 @@ function App() {
   useEffect(() => {
     if (window.Telegram) {
       const tg = window.Telegram.WebApp;
-      tg.expand(); // Étend la mini-app en plein écran
+      tg.expand();
+
+      console.log("Telegram WebApp Object", tg);
+      console.log("initDataUnsafe", tg.initDataUnsafe);
 
       // Récupérer les infos de l'utilisateur
       if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
         setUser(tg.initDataUnsafe.user);
+      } else {
+        console.log("❌ Aucune donnée utilisateur reçue !");
       }
+    } else {
+      console.log("❌ window.Telegram non défini !");
     }
   }, []);
 
