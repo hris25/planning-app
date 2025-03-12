@@ -17,7 +17,7 @@ export default function QuickStats() {
       <h2 className="text-lg font-semibold mb-3">Aperçu rapide</h2>
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-blue-50 p-3 rounded-lg">
-          <p className="text-sm text-blue-800">Tâches aujourd'hui</p>
+          <p className="text-sm text-blue-800">Tâches aujourd&apos;hui</p>
           <p className="text-xl font-bold text-blue-900">{todayCount}</p>
         </div>
         <div className="bg-green-50 p-3 rounded-lg">
