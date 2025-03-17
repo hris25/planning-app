@@ -8,9 +8,44 @@ import QuickStats from "./components/QuickStats";
 import TaskList from "./components/TaskList";
 import useTaskStore from "./stores/useTaskStore";
 
+function HomeView() {
+  const setView = useTaskStore((state) => state.setView);
+
+  return (
+    <div className="p-4 mt-4">
+      <QuickStats />
+      <button
+        onClick={() => setView("tasks")}
+        className="w-full mb-6 bg-blue-500 text-white py-3 px-4 rounded-xl shadow-sm hover:bg-blue-600 transition-colors"
+      >
+        Voir la liste des tâches
+      </button>
+      <FeatureGrid features={features} />
+      <DailyTip />
+    </div>
+  );
+}
+
+function TasksView() {
+  const setView = useTaskStore((state) => state.setView);
+
+  return (
+    <div className="p-4 mt-4">
+      <button
+        onClick={() => setView("home")}
+        className="mb-4 flex items-center text-blue-500"
+      >
+        <span className="mr-2">←</span> Retour
+      </button>
+      <TaskList />
+    </div>
+  );
+}
+
 function App() {
-  const [user, setUser] = useState(null);
+  const currentView = useTaskStore((state) => state.currentView);
   const toggleCalendar = useTaskStore((state) => state.toggleCalendar);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     if (window.Telegram) {
@@ -40,12 +75,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header user={user} />
-      <div className="p-4 mt-4">
-        <QuickStats />
-        <FeatureGrid features={features} />
-        <DailyTip />
-        <TaskList />
-      </div>
+      {currentView === "home" ? <HomeView /> : <TasksView />}
       <Calendar />
     </div>
   );

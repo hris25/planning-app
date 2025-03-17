@@ -4,6 +4,7 @@ import { persist } from "zustand/middleware";
 const useTaskStore = create(
   persist(
     (set, get) => ({
+      currentView: "home", // 'home' ou 'tasks'
       tasks: [],
       selectedDate: new Date(),
       isCalendarOpen: false,
@@ -20,6 +21,7 @@ const useTaskStore = create(
         set((state) => ({ isCalendarOpen: !state.isCalendarOpen })),
       setNewTask: (taskData) =>
         set((state) => ({ newTask: { ...state.newTask, ...taskData } })),
+      setView: (view) => set({ currentView: view }),
 
       addTask: (task) => {
         set((state) => ({

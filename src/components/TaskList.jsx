@@ -19,8 +19,8 @@ export default function TaskList() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
-      <h2 className="text-lg font-semibold mb-3">Liste des tâches</h2>
+    <div className="bg-white rounded-xl shadow-sm p-4">
+      <h2 className="text-lg font-semibold mb-4">Mes tâches</h2>
 
       {/* Formulaire d'édition */}
       {editingTask && (
@@ -127,6 +127,12 @@ export default function TaskList() {
           </div>
         ))}
       </div>
+
+      {tasks.length === 0 && (
+        <p className="text-center text-gray-500 py-8">
+          Aucune tâche pour le moment
+        </p>
+      )}
     </div>
   );
 }
