@@ -7,22 +7,25 @@ const useTaskStore = create(
       tasks: [],
       selectedDate: new Date(),
       isCalendarOpen: false,
+      newTask: {
+        title: "",
+        description: "",
+        date: null,
+        time: null,
+      },
 
       // Actions
       setSelectedDate: (date) => set({ selectedDate: date }),
       toggleCalendar: () =>
         set((state) => ({ isCalendarOpen: !state.isCalendarOpen })),
+      setNewTask: (taskData) =>
+        set((state) => ({ newTask: { ...state.newTask, ...taskData } })),
 
       addTask: (task) => {
         set((state) => ({
-          tasks: [
-            ...state.tasks,
-            {
-              ...task,
-              id: Date.now(),
-              status: "PENDING",
-            },
-          ],
+          tasks: [...state.tasks, task],
+          newTask: { title: "", description: "", date: null, time: null },
+          isCalendarOpen: false,
         }));
       },
 

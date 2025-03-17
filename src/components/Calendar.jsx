@@ -1,117 +1,71 @@
-import { useState } from "react";
 import useTaskStore from "../stores/useTaskStore";
 
 export default function Calendar() {
-  const { isCalendarOpen, selectedDate, toggleCalendar, addTask } =
-    useTaskStore();
+  const { isCalendarOpen, newTask, setNewTask, addTask } = useTaskStore();
 
-  const [newTask, setNewTask] = useState({
-    title: "",
-    description: "",
-    time: "",
-    date: selectedDate,
-  });
-
-  const tg = window.Telegram?.WebApp;
-  const user = tg?.initDataUnsafe?.user;
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!user) {
-      console.error("Utilisateur non trouvé");
-      return;
-    }
-
-    try {
-      await addTask({
+    if (newTask.title && newTask.date) {
+      addTask({
         ...newTask,
-        userId: user.id,
+        id: Date.now(),
+        createdAt: new Date(),
       });
-
-      setNewTask({
-        title: "",
-        description: "",
-        time: "",
-        date: selectedDate,
-      });
-
-      toggleCalendar();
-    } catch (error) {
-      console.error("Erreur lors de l'ajout de la tâche:", error);
     }
   };
 
-  const handleClose = () => {
-    toggleCalendar();
-  };
+  if (!isCalendarOpen) return null;
 
   return (
-    <div
-      className={`fixed inset-0 bg-black bg-opacity-50 ${
-        isCalendarOpen ? "block" : "hidden"
-      }`}
-    >
-      <div className="bg-white rounded-lg p-4 max-w-md mx-auto mt-20">
-        <button
-          onClick={handleClose}
-          className="float-right text-gray-500 hover:text-gray-700"
-        >
-          ✕
-        </button>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg p-4 w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4">Nouvelle Tâche</h2>
 
-        <h2 className="text-xl font-bold mb-4">Nouvelle tâche</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Titre de la tâche"
+            className="w-full mb-2 p-2 border rounded"
+            value={newTask.title}
+            onChange={(e) => setNewTask({ title: e.target.value })}
+          />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Titre
-            </label>
-            <input
-              type="text"
-              placeholder="Titre de la tâche"
-              value={newTask.title}
-              onChange={(e) =>
-                setNewTask({ ...newTask, title: e.target.value })
-              }
-              className="w-full mb-2 p-2 border rounded"
-              required
-            />
+          <textarea
+            placeholder="Description"
+            className="w-full mb-2 p-2 border rounded"
+            value={newTask.description}
+            onChange={(e) => setNewTask({ description: e.target.value })}
+          />
+
+          <input
+            type="date"
+            className="w-full mb-2 p-2 border rounded"
+            value={newTask.date || ""}
+            onChange={(e) => setNewTask({ date: e.target.value })}
+          />
+
+          <input
+            type="time"
+            className="w-full mb-2 p-2 border rounded"
+            value={newTask.time || ""}
+            onChange={(e) => setNewTask({ time: e.target.value })}
+          />
+
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => useTaskStore.getState().toggleCalendar()}
+              className="px-4 py-2 bg-gray-200 rounded"
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Ajouter
+            </button>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Description
-            </label>
-            <textarea
-              placeholder="Description"
-              value={newTask.description}
-              onChange={(e) =>
-                setNewTask({ ...newTask, description: e.target.value })
-              }
-              className="w-full mb-2 p-2 border rounded"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Heure
-            </label>
-            <input
-              type="time"
-              value={newTask.time}
-              onChange={(e) => setNewTask({ ...newTask, time: e.target.value })}
-              className="w-full mb-2 p-2 border rounded"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-          >
-            Ajouter la tâche
-          </button>
         </form>
       </div>
     </div>
