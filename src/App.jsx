@@ -5,6 +5,7 @@ import FeatureGrid from "./components/FeatureGrid";
 import { features } from "./components/features";
 import Header from "./components/Header";
 import QuickStats from "./components/QuickStats";
+import TaskList from "./components/TaskList";
 import useTaskStore from "./stores/useTaskStore";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
         <QuickStats />
         <FeatureGrid features={features} />
         <DailyTip />
+        <TaskList />
       </div>
       <Calendar />
     </div>

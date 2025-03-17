@@ -48,6 +48,14 @@ const useTaskStore = create(
         }));
       },
 
+      updateTask: (taskId, updatedData) => {
+        set((state) => ({
+          tasks: state.tasks.map((task) =>
+            task.id === taskId ? { ...task, ...updatedData } : task
+          ),
+        }));
+      },
+
       // Statistiques
       getTodayTasks: () => {
         const state = get();
